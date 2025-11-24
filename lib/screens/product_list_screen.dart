@@ -1,98 +1,102 @@
-// lib/screens/product_list_screen.dart
 import 'package:flutter/material.dart';
-import '../models/category.dart';
-import '../data/dummy_data.dart';
-import 'product_detail_screen.dart'; // Import layar tujuan
+import '../models/product_model.dart';
+import 'product_detail_screen.dart';
 
 class ProductListScreen extends StatelessWidget {
-  final Category selectedCategory;
+  final Category category;
 
-  const ProductListScreen({
-    super.key,
-    required this.selectedCategory,
-  });
+  const ProductListScreen({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
-    // Filter produk berdasarkan kategori
-    final categoryProducts = DUMMY_PRODUCTS
-        .where((prod) => prod.category.id == selectedCategory.id)
-        .toList();
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(selectedCategory.name), // TITLE: "[Nama Kategori]"
-        backgroundColor: Colors.redAccent,
+        title: Text(category.name),
+        backgroundColor: Colors.teal,
       ),
-      body: Column( // UI: Column
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Semua Produk ${selectedCategory.name}', // Text (title)
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(
-            child: GridView.builder( // Grid (2 kolom)
-              padding: const EdgeInsets.all(10),
-              itemCount: categoryProducts.length,
-              // Delegate untuk mengatur layout grid (2 kolom)
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 kolom
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 0.75, // Mengatur rasio agar card tidak terlalu lebar
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              child: GridView.builder(
+                itemCount: category.products.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemBuilder: (context, index) {
+                  return ProductCard(product: category.products[index]);
+                },
               ),
-              itemBuilder: (context, index) {
-                final product = categoryProducts[index];
-                return InkWell(
-                  onTap: () {
-                    // onTap Card (product): NAVIGATE TO ProductDetailScreen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProductDetailScreen(
-                          product: product,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Card( // Card (icon + label + price)
-                    elevation: 5,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Center(
-                            child: Icon(product.icon, size: 80, color: Colors.grey[700]), // Ikon produk
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            product.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-                          child: Text(
-                            'Rp ${product.price.toStringAsFixed(0)}', // Harga
-                            style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProductCard extends StatelessWidget {
+  final Product product;
+
+  const ProductCard({super.key, required this.product});
+
+  String _formatPrice(double price) {
+    return 'Rp ${price.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductDetailScreen(product: product),
+            ),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Hero( // Transisi ikon mulus
+                  tag: 'productIcon-${product.id}',
+                  child: Icon(product.icon, size: 60, color: Colors.blueGrey),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _formatPrice(product.price),
+                    style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

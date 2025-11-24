@@ -1,7 +1,6 @@
-// lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
-import '../data/dummy_data.dart';
-import 'product_list_screen.dart'; // Import layar tujuan
+import '../models/product_model.dart';
+import 'product_list_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,60 +9,74 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MyShop Mini'), // TITLE: "MyShop Mini"
-        backgroundColor: Colors.red,
+        title: const Text("MyShop Mini"),
+        backgroundColor: Colors.teal,
       ),
-      body: Column( // UI: Column
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Pilih Kategori', // Text (title)
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const Text(
+              "Jelajahi Kategori",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Wrap(
+              spacing: 10.0,
+              runSpacing: 10.0,
+              children: dummyCategories.map((category) {
+                return CategoryCard(category: category);
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CategoryCard extends StatelessWidget {
+  final Category category;
+
+  const CategoryCard({super.key, required this.category});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 100,
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductListScreen(category: category),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Hero(
+                  tag: 'categoryIcon-${category.name}',
+                  child: Icon(category.icon, size: 40, color: Colors.teal),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  category.name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
+              ],
             ),
           ),
-          // Row of 3 Card (kategori)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: DUMMY_CATEGORIES.map((cat) {
-              return Expanded( // Memastikan 3 Card memiliki lebar yang sama
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: InkWell( // Menggunakan InkWell untuk onTap
-                    onTap: () {
-                      // onTap Card (kategori): NAVIGATE TO ProductListScreen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductListScreen(
-                            selectedCategory: cat,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Card( // Card has: icon + label
-                      elevation: 6,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            Icon(cat.icon, size: 40, color: Colors.red),
-                            const SizedBox(height: 8),
-                            Text(cat.name, textAlign: TextAlign.center),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
+        ),
       ),
     );
   }

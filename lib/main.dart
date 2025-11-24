@@ -1,4 +1,3 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 
@@ -14,10 +13,9 @@ class MyShopMiniApp extends StatelessWidget {
     return MaterialApp(
       title: 'MyShop Mini',
       theme: ThemeData(
-        primarySwatch: Colors.red, // Mengubah warna utama
-        brightness: Brightness.light, // Menetapkan tema terang
+        primarySwatch: Colors.teal,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // APP START: show HomeScreen
       home: const HomeScreen(),
     );
   }
