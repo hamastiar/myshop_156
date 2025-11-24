@@ -1,16 +1,32 @@
-# myshop_mini
+# Muzakki Naufal Hamastiar / 221080200156
 
-A new Flutter project.
+Widget Struktur Dasar
+MaterialApp: Widget inti yang menyediakan fungsionalitas desain Material dan merupakan akar dari aplikasi Anda.
 
-## Getting Started
+Scaffold: Menyediakan kerangka visual dasar aplikasi, mencakup AppBar, body, dan potensi FloatingActionButton atau Drawer.
 
-This project is a starting point for a Flutter application.
+AppBar: Menampilkan judul halaman ("MyShop Mini" atau nama kategori) dan secara otomatis menangani tombol back untuk navigasi.
 
-A few resources to get you started if this is your first Flutter project:
+Widget Tata Letak (Layout)
+Column: Menyusun widget anak secara vertikal. Digunakan di semua layar untuk menata konten dari atas ke bawah.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Row: Menyusun widget anak secara horizontal. Digunakan dalam HomeScreen (dalam Wrap) untuk menata kartu kategori.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Padding: Memberikan ruang kosong (margin) di sekitar widget untuk estetika.
+
+Center: Menempatkan widget anak di tengah layar, digunakan dalam ProductDetailScreen.
+
+Expanded: Memaksa widget anak untuk mengisi sisa ruang yang tersedia di sepanjang sumbu utama (Column atau Row). Digunakan untuk memastikan GridView.builder mengisi sisa ruang di ProductListScreen.
+
+GridView.builder: Widget yang sangat efisien untuk menampilkan daftar item dalam format Grid (dua kolom), seperti yang diminta untuk daftar produk.
+
+Widget Interaktif & Tampilan
+Text: Menampilkan teks, seperti judul, nama produk, dan harga.
+
+Icon: Menampilkan ikon, digunakan sebagai pengganti gambar produk/kategori yang sederhana.
+
+Card: Memberikan tampilan yang elegan dan ditinggikan (elevation) pada kategori dan produk.
+
+InkWell: Widget yang membungkus widget lain (seperti Card) untuk membuatnya dapat diklik (onTap) sambil memberikan efek visual splash yang baik saat disentuh.
+
+Hero: Widget kunci yang digunakan untuk menciptakan transisi visual yang mulus dan indah (animasi) pada ikon produk saat berpindah dari ProductListScreen ke ProductDetailScreen.
